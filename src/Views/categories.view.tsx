@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { setCategories } from '../redux/actions';
 import { FAB } from 'react-native-paper';
 import CustomCard from '../Components/Cards';
@@ -36,38 +36,38 @@ const CategoriesScreen = () => {
   }
 
   const onAddField = (objectIndex: number, type: 'text' | 'number' | 'date' | 'checkbox') => {
-		const newCategory: Array<ICategory> = JSON.parse(JSON.stringify(categories));
+    const newCategory: Array<ICategory> = JSON.parse(JSON.stringify(categories));
     const fields = { value: '', type, label: '' }
     newCategory[objectIndex].fields.push(fields);
-		dispatch(updateCategory({item: newCategory[objectIndex], itemIndex: objectIndex}));
+    dispatch(updateCategory({item: newCategory[objectIndex], itemIndex: objectIndex}));
   }
-
-	
 
   const isCategoryExist = categories?.length === 0
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {isCategoryExist &&
+          <View style={styles.screenContainer}>
+            <Text style={styles.emptyText}>No Categories Found!</Text>
+          </View>
+        }
+
+        {!isCategoryExist &&
+          <View style={styles.contentContainer}>
+            {categories.map((item: ICategory, index: number) => (
+              <CustomCard
+                updateFieldValue={updateFieldValue}
+                key={index} item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField}
+              />
+            ))}
+          </View>
+        }
+      </ScrollView>
+
       <View style={styles.fabContainer}>
         <FAB icon="plus" style={styles.fab} onPress={handleAddButtonPress} />
       </View>
-
-      {isCategoryExist &&
-        <View style={styles.screenContainer}>
-          <Text style={styles.emptyText}>No Categories Found!</Text>
-        </View>
-      }
-
-      {!isCategoryExist &&
-        <View>
-          {categories.map((item: ICategory, index: number) => (
-            <CustomCard 
-							updateFieldValue={updateFieldValue} 
-							key={index} item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField}
-						/>
-          ))}
-        </View>
-      }
     </SafeAreaView>
   );
 };
@@ -75,6 +75,12 @@ const CategoriesScreen = () => {
 export default CategoriesScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   screenContainer: {
     flex: 1,
     alignItems: 'center',
@@ -83,6 +89,9 @@ const styles = StyleSheet.create({
   emptyText: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  contentContainer: {
+    paddingBottom: 80, // Adjust the bottom padding to make space for the FAB
   },
   fabContainer: {
     position: 'absolute',
