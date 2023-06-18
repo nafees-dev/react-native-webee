@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { setCategories } from '../redux/actions';
-import { connect } from 'react-redux';
 import { FAB } from 'react-native-paper';
 import CustomCard from '../Components/Cards';
 import { ICategory } from '../commonInterfaces';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCategory } from '../redux/reducer/categories';
+import { addCategory, deleteCategory, deleteCategoryField, updateCategory } from '../redux/reducer/categories';
 import { RootState } from "../redux/store"
 
 const CategoriesScreen = () => {
@@ -22,8 +21,6 @@ const CategoriesScreen = () => {
   };
 
   const handleAddButtonPress = () => {
-    console.log("testng====")
-
     const newCategory: ICategory = {
       id: categories?.length + 1,
       name: 'New Category',
@@ -34,20 +31,19 @@ const CategoriesScreen = () => {
 
   const onDeleteField = (fieldIndex: number, objectIndex: number) => {
     if (categories[objectIndex] && categories[objectIndex].fields[fieldIndex]) {
-      const newCategory = [...categories];
-      newCategory[objectIndex].fields.splice(fieldIndex, 1);
-      dispatch(addCategory(newCategory));
+      dispatch(deleteCategoryField({objectIndex, fieldIndex}));
     }
   }
 
   const onAddField = (objectIndex: number, type: 'text' | 'number' | 'date' | 'checkbox') => {
-    const newCategory: Array<ICategory> = [...categories];
+		const newCategory: Array<ICategory> = JSON.parse(JSON.stringify(categories));
     const fields = { value: '', type, label: '' }
     newCategory[objectIndex].fields.push(fields);
+		dispatch(updateCategory({item: newCategory[objectIndex], itemIndex: objectIndex}));
   }
 
   const isCategoryExist = categories?.length === 0
-  console.log(isCategoryExist, "====", categories)
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.fabContainer}>
@@ -63,7 +59,7 @@ const CategoriesScreen = () => {
       {!isCategoryExist &&
         <View>
           {categories.map((item: ICategory, index: number) => (
-            <CustomCard item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField} />
+            <CustomCard key={index} item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField} />
           ))}
         </View>
       }

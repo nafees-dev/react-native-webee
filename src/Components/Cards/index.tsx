@@ -13,15 +13,12 @@ interface PropsType {
 const CustomCard = (props: PropsType) => {
   const { item, onDeleteField, itemIndex, onAddField } = props;
 
-	// const onDeleteField = (fieldIndex: number) => {
-		
-	// }
   return (
-    <Card style={styles.cardWrapper}>
+    <Card style={styles.cardWrapper} key={itemIndex}>
       <Card.Title title={item.name} />
       <Card.Content>
-        {item.fields.map((field, fieldIndex) => (
-          <View style={styles.fieldWrapper} key={field.label}>
+        {item.fields?.map((field, fieldIndex) => (
+          <View style={styles.fieldWrapper} key={fieldIndex}>
             <TextInput label="Field" value={field.label} style={styles.textInput} />
             <Text style={styles.fieldType}>{field.type.toUpperCase()}</Text>
 						<IconButton icon="delete" size={20} onPress={() => onDeleteField(fieldIndex, itemIndex)}/>

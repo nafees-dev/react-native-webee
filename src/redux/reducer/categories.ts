@@ -1,5 +1,4 @@
-import { Draft, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICategory } from '../../commonInterfaces';
 
 export interface CategoriesState {
@@ -11,21 +10,30 @@ const initialState: CategoriesState = {
 }
 
 export const categoriesSlice = createSlice({
-  name: 'categoriesList',
+  name: 'categories',
   initialState,
   reducers: {
-    addCategory: (state: any, action: PayloadAction<any>) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-        state.list.push(action.payload);
+    addCategory: (state, action: PayloadAction<any>) => {
+      state.list.push(action.payload);
+    },
 
+    updateCategory: (state, action: PayloadAction<any>) => {
+      const { itemIndex, item } = action.payload;
+      state.list = state.list.map((category, i) => i === itemIndex ? item : category );
+    },
+
+    deleteCategory: (state, action: PayloadAction<any>) => {
+      const index = action.payload;
+      state.list = state.list.filter((_, i) => i !== index);
+    },
+
+    deleteCategoryField: (state, action: PayloadAction<{ objectIndex: number; fieldIndex: number }>) => {
+      const { objectIndex, fieldIndex } = action.payload;
+      state.list[objectIndex].fields.splice(fieldIndex, 1);
     },
   },
 })
 
-// Action creators are generated for each case reducer function
-export const { addCategory } = categoriesSlice.actions
+export const { addCategory, updateCategory, deleteCategory,deleteCategoryField } = categoriesSlice.actions;
 
-export default categoriesSlice.reducer
+export default categoriesSlice.reducer;
