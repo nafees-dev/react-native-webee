@@ -1,6 +1,6 @@
 interface IField {
     value: string;
-    type: 'text' | 'number' | 'date' ;
+    type: 'text' | 'number' | 'date' | 'checkbox' ;
     label: string;
 }
 

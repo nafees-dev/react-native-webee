@@ -7,15 +7,15 @@ interface PropsType {
   item: ICategory;
 	onDeleteField: (index: number, itemIndex: number) => void;
 	itemIndex: number;
+  onAddField: (itemIndex: number, type: 'text' | 'number' | 'date' | 'checkbox') => void
 }
 
 const CustomCard = (props: PropsType) => {
-  const { item, onDeleteField, itemIndex } = props;
+  const { item, onDeleteField, itemIndex, onAddField } = props;
 
 	// const onDeleteField = (fieldIndex: number) => {
 		
 	// }
-
   return (
     <Card style={styles.cardWrapper}>
       <Card.Title title={item.name} />
@@ -29,7 +29,7 @@ const CustomCard = (props: PropsType) => {
         ))}
       </Card.Content>
       <Card.Actions>
-        <Button onPress={() => console.log('Button pressed!')}>Action</Button>
+        <Button onPress={() => onAddField(itemIndex, 'text')}>Add Field</Button>
       </Card.Actions>
     </Card>
   );
