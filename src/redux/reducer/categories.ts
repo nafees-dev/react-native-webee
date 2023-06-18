@@ -19,7 +19,7 @@ export const categoriesSlice = createSlice({
 
     updateCategory: (state, action: PayloadAction<any>) => {
       const { itemIndex, item } = action.payload;
-      state.list = state.list.map((category, i) => i === itemIndex ? item : category );
+      state.list = state.list.map((category, i) => i === itemIndex ? item : category);
     },
 
     deleteCategory: (state, action: PayloadAction<any>) => {
@@ -31,9 +31,20 @@ export const categoriesSlice = createSlice({
       const { objectIndex, fieldIndex } = action.payload;
       state.list[objectIndex].fields.splice(fieldIndex, 1);
     },
+
+    updateFieldValue: (state: any, action: PayloadAction<any>) => {
+      const { fieldIndex, itemIndex, value } = action.payload;
+      const newCategories = [...state.list];
+
+      if (newCategories[itemIndex] && newCategories[itemIndex].fields) {
+        newCategories[itemIndex].fields[fieldIndex].label = value;
+      }
+
+      state.list = newCategories;
+    },
   },
 })
 
-export const { addCategory, updateCategory, deleteCategory,deleteCategoryField } = categoriesSlice.actions;
+export const { addCategory, updateCategory, deleteCategory, deleteCategoryField, updateFieldValue } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

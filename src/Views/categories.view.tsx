@@ -5,7 +5,7 @@ import { FAB } from 'react-native-paper';
 import CustomCard from '../Components/Cards';
 import { ICategory } from '../commonInterfaces';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCategory, deleteCategory, deleteCategoryField, updateCategory } from '../redux/reducer/categories';
+import { addCategory, deleteCategory, deleteCategoryField, updateCategory, updateFieldValue } from '../redux/reducer/categories';
 import { RootState } from "../redux/store"
 
 const CategoriesScreen = () => {
@@ -42,6 +42,8 @@ const CategoriesScreen = () => {
 		dispatch(updateCategory({item: newCategory[objectIndex], itemIndex: objectIndex}));
   }
 
+	
+
   const isCategoryExist = categories?.length === 0
 
   return (
@@ -59,7 +61,10 @@ const CategoriesScreen = () => {
       {!isCategoryExist &&
         <View>
           {categories.map((item: ICategory, index: number) => (
-            <CustomCard key={index} item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField} />
+            <CustomCard 
+							updateFieldValue={updateFieldValue} 
+							key={index} item={item} onDeleteField={onDeleteField} itemIndex={index} onAddField={onAddField}
+						/>
           ))}
         </View>
       }

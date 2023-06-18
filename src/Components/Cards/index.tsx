@@ -2,16 +2,20 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, Button, Title, Paragraph, PaperProvider, HelperText, Text, TextInput, IconButton } from 'react-native-paper';
 import { ICategory } from '../../commonInterfaces';
+import { useDispatch } from 'react-redux';
 
 interface PropsType {
   item: ICategory;
 	onDeleteField: (index: number, itemIndex: number) => void;
 	itemIndex: number;
-  onAddField: (itemIndex: number, type: 'text' | 'number' | 'date' | 'checkbox') => void
+  onAddField: (itemIndex: number, type: 'text' | 'number' | 'date' | 'checkbox') => void,
+  updateFieldValue: (a: {itemIndex: number, fieldIndex: number, value: string}) => any,
 }
 
 const CustomCard = (props: PropsType) => {
-  const { item, onDeleteField, itemIndex, onAddField } = props;
+  const { item, onDeleteField, itemIndex, onAddField, updateFieldValue } = props;
+
+  const dispatch = useDispatch()
 
   return (
     <Card style={styles.cardWrapper} key={itemIndex}>
@@ -19,7 +23,8 @@ const CustomCard = (props: PropsType) => {
       <Card.Content>
         {item.fields?.map((field, fieldIndex) => (
           <View style={styles.fieldWrapper} key={fieldIndex}>
-            <TextInput label="Field" value={field.label} style={styles.textInput} />
+            <TextInput onChangeText={(text: string) =>  dispatch(updateFieldValue({itemIndex,fieldIndex,value:text}))} label="Field" 
+              value={field.label} style={styles.textInput} />
             <Text style={styles.fieldType}>{field.type.toUpperCase()}</Text>
 						<IconButton icon="delete" size={20} onPress={() => onDeleteField(fieldIndex, itemIndex)}/>
           </View>
